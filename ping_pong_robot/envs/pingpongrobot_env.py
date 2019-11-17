@@ -13,7 +13,14 @@ class PingpongrobotEnv(gym.Env):
     metadata = {'render.modes': ['human']}
 
     def __init__(self):
-        pass
+        self._observation = []
+        self.action_space = spaces.Discrete(9)
+        # pitch, gyro, commanded speed
+        self.observation_space = spaces.Box(np.array([-math.pi, -math.pi, -5]),
+                                            np.array([math.pi, math.pi, 5]))
+        self.physicsClient = p.connect(p.GUI)
+        p.setAdditionalSearchPath(pybullet_data.getDataPath()) # used by loadURDF
+        self._seed()
 
     def _step(self, action):
         pass
@@ -22,4 +29,7 @@ class PingpongrobotEnv(gym.Env):
         pass
 
     def _render(self, mode='human', close=False):
+        pass
+
+    def _seed(self, seed=None):
         pass
