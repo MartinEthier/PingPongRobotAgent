@@ -10,7 +10,10 @@ import pybullet as p
 import pybullet_data
 
 class PingpongrobotEnv(gym.Env):
-    metadata = {'render.modes': ['human']}
+    metadata = {
+        'render.modes': ['human', 'rgb_array'],
+        'video.frames_per_second' : 50
+    }
 
     def __init__(self):
         self._observation = []
@@ -23,7 +26,8 @@ class PingpongrobotEnv(gym.Env):
         self._seed()
 
     def _seed(self, seed=None):
-        pass
+        self.np_random, seed = seeding.np_random(seed)
+        return [seed]
 
     def _step(self, action):
         self._assign_throttle(action)
