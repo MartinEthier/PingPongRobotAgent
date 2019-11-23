@@ -47,13 +47,20 @@ class PingpongrobotEnv(gym.Env):
         pass
 
     def _compute_observation(self):
-        pass
+        cubePos, cubeOrn = p.getBasePositionAndOrientation(self.botId)
+        cubeEuler = p.getEulerFromQuaternion(cubeOrn)
+        linear, angular = p.getBaseVelocity(self.botId)
+        return [cubeEuler[0], angular[0], self.vt]
 
     def _compute_reward(self):
-        pass
+        _, cubeOrn = p.getBasePositionAndOrientation(self.botId)
+        cubeEuler = p.getEulerFromQuaternion(cubeOrn)
+        # could also be pi/2 - abs(cubeEuler[0])
+        return (1 - abs(cubeEuler[0])) * 0.1 - abs(self.vt - self.vd) * 0.01
 
     def _compute_done(self):
-        pass
+        cubePos, _ = p.getBasePositionAndOrientation(self.botId)
+        return cubePos[2] < 0.15 or self._envStepCounter >= 1500
 
     def _render(self, mode='human', close=False):
         pass
