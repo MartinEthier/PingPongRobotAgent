@@ -64,7 +64,19 @@ class PingpongrobotEnv(gym.Env):
         return np.array(self._observation)
 
     def _assign_throttle(self, action):
-        pass
+        dv = 0.1
+        deltav = [-10.*dv,-5.*dv, -2.*dv, -0.1*dv, 0, 0.1*dv, 2.*dv,5.*dv, 10.*dv][action]
+        vt = clamp(self.vt + deltav, -self.maxV, self.maxV)
+        self.vt = vt
+
+        p.setJointMotorControl2(bodyUniqueId=self.botId, 
+                                jointIndex=0, 
+                                controlMode=p.VELOCITY_CONTROL, 
+                                targetVelocity=vt)
+        p.setJointMotorControl2(bodyUniqueId=self.botId, 
+                                jointIndex=1, 
+                                controlMode=p.VELOCITY_CONTROL, 
+                                targetVelocity=-vt)
 
     def _compute_observation(self):
         cubePos, cubeOrn = p.getBasePositionAndOrientation(self.botId)
